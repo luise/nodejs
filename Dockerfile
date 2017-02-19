@@ -12,12 +12,4 @@ RUN apt-get -y update \
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 
-RUN git clone https://github.com/tejasmanohar/node-todo.git .
-
-RUN apt-get remove --purge -y golang-go $(apt-mark showauto) \
-&& rm -rf $GOPATH \
-&& rm -rf /var/lib/apt/lists/*
-
-RUN npm install
-
 CMD ["/start"]
