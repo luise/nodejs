@@ -1,3 +1,5 @@
+const {Container, Service, Image} = require("@quilt/quilt");
+
 // Specs for Node.js web service
 function Node(cfg) {
   if (typeof cfg.nWorker !== 'number') {
