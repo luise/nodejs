@@ -30,7 +30,7 @@ Node.prototype.port = function() {
 
 Node.prototype.connect = function(port, to) {
   to.services().forEach(function(service) {
-    this._app.connect(port, service);
+    service.allowFrom(this._app, port);
   }.bind(this));
 };
 
