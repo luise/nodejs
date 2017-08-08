@@ -1,4 +1,22 @@
-const {Container, Service, Image} = require("@quilt/quilt");
+const { Container, Service, Image } = require('@quilt/quilt');
+
+// imageName transforms `repo` into a Docker image name. The name is always
+// `node-app`, and the tag is the final path in the repository name. For example.
+// "https://github.com/tejasmanohar/node-todo.git" becomes "node-app:node-todo.git".
+function imageName(repo) {
+  let name = 'node-app';
+  const repoIdx = repo.lastIndexOf('/');
+  if (repoIdx !== -1) {
+    name += `:${repo.slice(repoIdx + 1)}`;
+  }
+  return name;
+}
+
+function buildContainer(repo) {
+  return new Container(new Image(imageName(repo),
+    `FROM quilt/nodejs
+RUN git clone ${repo} . && npm install`));
+}
 
 // Specs for Node.js web service
 function Node(cfg) {
@@ -11,46 +29,27 @@ function Node(cfg) {
 
   this._port = cfg.port || 80;
 
-  var env = cfg.env || {};
-  var containers = buildContainer(cfg.repo).withEnv(env).replicate(cfg.nWorker);
-  this._app = new Service("app", containers);
-};
+  const env = cfg.env || {};
+  const containers = buildContainer(cfg.repo).withEnv(env).replicate(cfg.nWorker);
+  this._app = new Service('app', containers);
+}
 
-Node.prototype.deploy = function(deployment) {
+Node.prototype.deploy = function deploy(deployment) {
   deployment.deploy(this.services());
 };
 
-Node.prototype.services = function() {
+Node.prototype.services = function services() {
   return [this._app];
 };
 
-Node.prototype.port = function() {
+Node.prototype.port = function port() {
   return this._port;
 };
 
-Node.prototype.connect = function(port, to) {
-  to.services().forEach(function(service) {
+Node.prototype.connect = function connect(port, to) {
+  to.services().forEach((service) => {
     service.allowFrom(this._app, port);
-  }.bind(this));
+  });
 };
-
-function buildContainer(repo) {
-    return new Container(new Image(imageName(repo),
-        "FROM quilt/nodejs\n" +
-        "RUN git clone " + repo + " . && npm install"
-    ))
-}
-
-// imageName transforms `repo` into a Docker image name. The name is always
-// `node-app`, and the tag is the final path in the repository name. For example.
-// "https://github.com/tejasmanohar/node-todo.git" becomes "node-app:node-todo.git".
-function imageName(repo) {
-    var imageName = "node-app";
-    var repoIdx = repo.lastIndexOf("/");
-    if (repoIdx != -1) {
-        imageName += ":" + repo.slice(repoIdx+1);
-    }
-    return imageName;
-}
 
 module.exports = Node;
