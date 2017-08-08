@@ -1,6 +1,6 @@
 {
   "name": "@quilt/nodejs",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "main": "./node.js",
   "license": "MIT",
   "dependencies": {

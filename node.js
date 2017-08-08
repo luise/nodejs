@@ -46,9 +46,9 @@ Node.prototype.port = function port() {
   return this._port;
 };
 
-Node.prototype.connect = function connect(port, to) {
-  to.services().forEach((service) => {
-    service.allowFrom(this._app, port);
+Node.prototype.allowFrom = function allowFrom(from, port) {
+  from.services().forEach((service) => {
+    this._app.allowFrom(service, port);
   });
 };
 
