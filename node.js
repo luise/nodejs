@@ -1,4 +1,4 @@
-const { Container, Service, Image } = require('@quilt/quilt');
+const { Container, Image } = require('@quilt/quilt');
 
 // imageName transforms `repo` into a Docker image name. The name is always
 // `node-app`, and the tag is the final path in the repository name. For example.
@@ -13,9 +13,10 @@ function imageName(repo) {
 }
 
 function buildContainer(repo) {
-  return new Container(new Image(imageName(repo),
-    `FROM quilt/nodejs
-RUN git clone ${repo} . && npm install`));
+  const name = imageName(repo);
+  const image = new Image(name, `FROM quilt/nodejs
+RUN git clone ${repo} . && npm install`);
+  return new Container('node-app', image);
 }
 
 // Specs for Node.js web service
@@ -31,25 +32,15 @@ function Node(cfg) {
 
   const env = cfg.env || {};
   const containers = buildContainer(cfg.repo).withEnv(env).replicate(cfg.nWorker);
-  this._app = new Service('app', containers);
+  this.cluster = containers;
 }
 
 Node.prototype.deploy = function deploy(deployment) {
-  deployment.deploy(this.services());
-};
-
-Node.prototype.services = function services() {
-  return [this._app];
+  deployment.deploy(this.cluster);
 };
 
 Node.prototype.port = function port() {
   return this._port;
-};
-
-Node.prototype.allowFrom = function allowFrom(from, port) {
-  from.services().forEach((service) => {
-    this._app.allowFrom(service, port);
-  });
 };
 
 module.exports = Node;
