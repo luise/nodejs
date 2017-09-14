@@ -22,7 +22,6 @@ function imageName(repo) {
  * @param {number} cfg.nWorker - The number of Node.js workers to create.
  * @param {string} cfg.string - The Github repository to install on each
  *   Node.js container.
- * @param {number} [cfg.port=80] - The port.
  * @param {Object} [cfg.env] - Map of environment variable names to values
  *   that should be set on each Node.js container.
  */
@@ -33,8 +32,6 @@ function Node(cfg) {
   if (typeof cfg.repo !== 'string') {
     throw new Error('`repo` is required');
   }
-
-  this._port = cfg.port || 80;
 
   const env = cfg.env || {};
   const name = imageName(cfg.repo);
@@ -49,10 +46,6 @@ RUN git clone ${cfg.repo} . && npm install`);
 
 Node.prototype.deploy = function deploy(deployment) {
   deployment.deploy(this.cluster);
-};
-
-Node.prototype.port = function port() {
-  return this._port;
 };
 
 module.exports = Node;
