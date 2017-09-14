@@ -12,7 +12,20 @@ function imageName(repo) {
   return name;
 }
 
-// Specs for Node.js web service
+/**
+ * Creates a new Node object, which encapsulates a set of containers to run
+ * a Node.js application.
+ * @constructor
+ *
+ * @param {Object} cfg - An object containing configuration information for
+ *   Node.js.
+ * @param {number} cfg.nWorker - The number of Node.js workers to create.
+ * @param {string} cfg.string - The Github repository to install on each
+ *   Node.js container.
+ * @param {number} [cfg.port=80] - The port.
+ * @param {Object} [cfg.env] - Map of environment variable names to values
+ *   that should be set on each Node.js container.
+ */
 function Node(cfg) {
   if (typeof cfg.nWorker !== 'number') {
     throw new Error('`nWorker` is required');
