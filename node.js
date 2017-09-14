@@ -12,13 +12,6 @@ function imageName(repo) {
   return name;
 }
 
-function buildContainer(repo) {
-  const name = imageName(repo);
-  const image = new Image(name, `FROM quilt/nodejs
-RUN git clone ${repo} . && npm install`);
-  return new Container('node-app', image);
-}
-
 // Specs for Node.js web service
 function Node(cfg) {
   if (typeof cfg.nWorker !== 'number') {
@@ -31,8 +24,11 @@ function Node(cfg) {
   this._port = cfg.port || 80;
 
   const env = cfg.env || {};
-  const containers = buildContainer(cfg.repo).withEnv(env).replicate(cfg.nWorker);
-  this.cluster = containers;
+  const name = imageName(cfg.repo);
+  const image = new Image(name, `FROM quilt/nodejs
+RUN git clone ${cfg.repo} . && npm install`);
+
+  this.cluster = new Container('node-app', image).withEnv(env).replicate(cfg.nWorker);
 }
 
 Node.prototype.deploy = function deploy(deployment) {
