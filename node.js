@@ -28,7 +28,10 @@ function Node(cfg) {
   const image = new Image(name, `FROM quilt/nodejs
 RUN git clone ${cfg.repo} . && npm install`);
 
-  this.cluster = new Container('node-app', image).withEnv(env).replicate(cfg.nWorker);
+  this.cluster = [];
+  for (let i = 0; i < cfg.nWorker; i += 1) {
+    this.cluster.push(new Container('node-app', image).withEnv(env));
+  }
 }
 
 Node.prototype.deploy = function deploy(deployment) {
