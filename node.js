@@ -45,7 +45,7 @@ RUN git clone ${cfg.repo} . && npm install`);
 }
 
 Node.prototype.deploy = function deploy(deployment) {
-  deployment.deploy(this.cluster);
+  this.cluster.forEach(container => container.deploy(deployment));
 };
 
 module.exports = Node;
