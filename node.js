@@ -38,14 +38,14 @@ function Node(cfg) {
   const image = new Image(name, `FROM quilt/nodejs
 RUN git clone ${cfg.repo} . && npm install`);
 
-  this.cluster = [];
+  this.containers = [];
   for (let i = 0; i < cfg.nWorker; i += 1) {
-    this.cluster.push(new Container('node-app', image).withEnv(env));
+    this.containers.push(new Container('node-app', image).withEnv(env));
   }
 }
 
 Node.prototype.deploy = function deploy(deployment) {
-  this.cluster.forEach(container => container.deploy(deployment));
+  this.containers.forEach(container => container.deploy(deployment));
 };
 
 module.exports = Node;
