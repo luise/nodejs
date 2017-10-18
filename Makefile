@@ -1,4 +1,4 @@
-REPO = quilt/nodejs
+REPO = keldaio/nodejs
 
 all: build-image
 

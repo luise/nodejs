@@ -1,4 +1,4 @@
-const { Container, Image } = require('@quilt/quilt');
+const { Container, Image } = require('kelda');
 
 // imageName transforms `repo` into a Docker image name. The name is always
 // `node-app`, and the tag is the final path in the repository name. For example.
@@ -35,7 +35,7 @@ function Node(cfg) {
 
   const env = cfg.env || {};
   const name = imageName(cfg.repo);
-  const image = new Image(name, `FROM quilt/nodejs
+  const image = new Image(name, `FROM keldaio/nodejs
 RUN git clone ${cfg.repo} . && npm install`);
 
   this.containers = [];

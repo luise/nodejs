@@ -1,4 +1,4 @@
-# Node.js for Quilt
+# Node.js for Kelda
 
-This repository implements a Node.js specification for Quilt.js.  See
-[Quilt](http://quilt.io) for more information.
+This repository implements a Node.js specification for Kelda.js.  See
+[Kelda](http://kelda.io) for more information.
