@@ -4,7 +4,8 @@
   "main": "./node.js",
   "license": "MIT",
   "dependencies": {
-    "kelda": "0.x"
+    "kelda": "0.x",
+    "@kelda/mongo": "kelda/mongo"
   },
   "devDependencies": {
     "eslint": "^4.4.1",
