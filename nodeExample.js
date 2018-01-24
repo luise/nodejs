@@ -22,8 +22,8 @@ const app = new Node({
   },
 });
 
-mongo.allowFrom(app.containers, mongo.port);
-kelda.allow(kelda.publicInternet, app.containers, port);
+mongo.allowTrafficFrom(app.containers, mongo.port);
+kelda.allowTraffic(kelda.publicInternet, app.containers, port);
 
 const infra = kelda.baseInfrastructure();
 
