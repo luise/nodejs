@@ -35,12 +35,16 @@ function Node(cfg) {
 
   const env = cfg.env || {};
   const name = imageName(cfg.repo);
-  const image = new Image(name, `FROM keldaio/nodejs
-RUN git clone ${cfg.repo} . && npm install`);
+  const image = new Image({
+    name,
+    dockerfile: `FROM keldaio/nodejs
+RUN git clone ${cfg.repo} . && npm install`,
+  });
 
   this.containers = [];
   for (let i = 0; i < cfg.nWorker; i += 1) {
-    this.containers.push(new Container('node-app', image).withEnv(env));
+    this.containers.push(
+      new Container({ name: 'node-app', image, env }));
   }
 }
 
